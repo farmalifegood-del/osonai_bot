@@ -1,4 +1,5 @@
 aiogram
 google-genai
+google-auth
 python-dotenv
 aiohttp

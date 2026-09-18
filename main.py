@@ -5,18 +5,29 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiohttp import web
 from google import genai
+from google.auth.credentials import Credentials
 
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO2lK3SAAUaw"
 GEMINI_API_KEY = "AQ.Ab8RN6LAqQVv0WW7OMmEd8LFZejgdB7aIYB4vx3rJ_JBL_jLSA"
 
-# AQ... kaliti uchun Vertex AI rejimida ulanish
+# AQ... kalitini OAuth2 Bearer token ko'rinishida o'rash
+class ExplicitTokenCredentials(Credentials):
+    def __init__(self, token):
+        super().__init__()
+        self.token = token
+
+    def refresh(self, request):
+        pass
+
+# Service account / Cloud client sozlamasi
+credentials = ExplicitTokenCredentials(GEMINI_API_KEY)
 client = genai.Client(
+    credentials=credentials,
     vertexai=True,
     project="483143579792",
-    location="us-central1",
-    api_key=GEMINI_API_KEY
+    location="us-central1"
 )
 
 bot = Bot(token=BOT_TOKEN)

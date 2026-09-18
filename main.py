@@ -1,39 +1,55 @@
 import asyncio
-from aiogram import Bot, Dispatcher, types, F
-from aiogram.filters import CommandStart
+import os
+import logging
+from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
 from google import genai
 
-# Sizning token va API kalitlaringiz
-BOT_TOKEN = "8588322130:AAF_NBzbiLjOJr79YGhLMLSDckZeyqvwPyw"
-GEMINI_API_KEY = "AQ.Ab8RN6J-zvcveHsk4G5hm50aSsiT1sD0UuKu67k2OR3u62ZvIA"
+# Loglarni sozlash
+logging.basicConfig(level=logging.INFO)
 
-# Bot va Gemini sozlamalari
+# Render'dagi Environment Variables bo'limidan kalitlarni o'qish
+BOT_TOKEN = "8588322130:AAF_NBzbiLj0Jr79YGhLMLSDckZeyqvwPyw"
+GEMINI_API_KEY = "AQ.Ab8RN6LoJWo-h9RJcHc-W7loshL5KAxbG2zf-zi8EsHz5x-7GQ"
+
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN ko'rsatilmadi!")
+
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY ko'rsatilmadi!")
+
+# Bot va Gemini mijozini yaratish
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
-gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+ai_client = genai.Client(api_key=GEMINI_API_KEY)
 
-# /start buyrug'i uchun
-@dp.message(CommandStart())
+
+@dp.message(Command("start"))
 async def start_handler(message: types.Message):
-    await message.answer("Salom! Men Telegram ichidagi Oson AI botiman. Xohlagan savolingizni yuboring!")
+    await message.answer(
+        "Salom! Men Telegram ichidagi Oson AI botiman. Xohlagan savolingizni yuboring!"
+    )
 
-# Matnli xabarlarga javob berish
-@dp.message(F.text)
-async def gemini_handler(message: types.Message):
+
+@dp.message()
+async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
+
     try:
-        # Yangilangan Gemini modeli: gemini-3.6-flash
-        response = gemini_client.models.generate_content(
-            model="gemini-3.6-flash",
+        response = ai_client.models.generate_content(
+            model="gemini-2.5-flash",
             contents=message.text,
         )
         await message.answer(response.text)
     except Exception as e:
+        logging.error(f"Xatolik: {e}")
         await message.answer(f"Xatolik yuz berdi: {e}")
+
 
 async def main():
     print("Bot muvaffaqiyatli ishga tushdi!")
     await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -8,13 +8,11 @@ import google.generativeai as genai
 
 logging.basicConfig(level=logging.INFO)
 
-# Ключи
 BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO2lK3SAAUaw"
 GEMINI_API_KEY = "AQ.Ab8RN6LAqQVv0WW7OMmEd8LFZejgdB7aIYB4vx3rJ_JBL_jLSA"
 
-# Настройка Gemini
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-pro")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -31,9 +29,9 @@ async def ai_handler(message: types.Message):
         await message.answer(response.text)
     except Exception as e:
         logging.error(f"Xatolik: {e}")
-        await message.answer("Kechirasiz, javob tayyorlashda xatolik yuz berdi.")
+        # Xatolikning aniq matnini Telegram'ga yuboradi
+        await message.answer(f"Aniq xatolik: {str(e)[:300]}")
 
-# Фейковый веб-сервер для порта Render
 async def handle(request):
     return web.Response(text="Bot ishlayapti!")
 
@@ -48,10 +46,6 @@ async def main():
 
     print("Bot muvaffaqiyatli ishga tushdi!")
     await dp.start_polling(bot)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-
 
 if __name__ == "__main__":
     asyncio.run(main())

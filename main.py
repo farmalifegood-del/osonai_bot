@@ -9,7 +9,7 @@ from openai import OpenAI
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAFvPZ-U3xOVVRtDDBUfHgl7S7BkimVbbBo"
-# OpenRouter'dan olgan sk-or-v1-... kalitingizni joylang:
+# Укажите ваш API-ключ sk-or-v1-... от OpenRouter:
 OPENROUTER_API_KEY = "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" 
 
 client = OpenAI(
@@ -40,9 +40,10 @@ async def ai_handler(message: types.Message):
         await message.answer(f"Aniq xatolik: {str(e)[:300]}")
 
 async def handle(request):
-    return web.Response(text="Bot ishlayapti!")
+    return web.Response(text="OK")
 
 async def main():
+    # Запуск легкого веб-сервера для Render
     app = web.Application()
     app.router.add_get("/", handle)
     runner = web.AppRunner(app)
@@ -52,7 +53,12 @@ async def main():
     await site.start()
 
     print("Bot muvaffaqiyatli ishga tushdi!")
-    await dp.start_polling(bot)
+    
+    # Запуск фоновой задачи опроса Telegram
+    asyncio.create_task(dp.start_polling(bot))
+    
+    # Поддержание работы веб-сервера
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
     asyncio.run(main())

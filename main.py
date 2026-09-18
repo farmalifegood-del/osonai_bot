@@ -4,14 +4,18 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiohttp import web
-from groq import Groq
+from openai import OpenAI
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8588322130:AAEMlT8OdWO1UeyKdPgAVzV2-wKyW6ndQME"
-GROQ_API_KEY = "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"
+BOT_TOKEN = "8588322130:AAFvPZ-U3xOVVRtDDBUfHgl7S7BkimVbbBo"
+# OpenRouter'dan olgan sk-or-v1-... kalitingizni joylang:
+OPENROUTER_API_KEY = "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" 
 
-client = Groq(api_key=GROQ_API_KEY)
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=OPENROUTER_API_KEY,
+)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -25,7 +29,7 @@ async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
         response = client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="deepseek/deepseek-chat:free",
             messages=[
                 {"role": "user", "content": message.text}
             ]

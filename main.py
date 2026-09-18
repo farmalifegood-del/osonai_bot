@@ -11,7 +11,13 @@ logging.basicConfig(level=logging.INFO)
 BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO2lK3SAAUaw"
 GEMINI_API_KEY = "AQ.Ab8RN6LAqQVv0WW7OMmEd8LFZejgdB7aIYB4vx3rJ_JBL_jLSA"
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+# AQ... kaliti uchun Vertex AI rejimida ulanish
+client = genai.Client(
+    vertexai=True,
+    project="483143579792",
+    location="us-central1",
+    api_key=GEMINI_API_KEY
+)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -25,7 +31,7 @@ async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             contents=message.text,
         )
         await message.answer(response.text)

@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAFvPZ-U3xOVVRtDDBUfHgl7S7BkimVbbBo"
 # Укажите ваш API-ключ sk-or-v1-... от OpenRouter:
-OPENROUTER_API_KEY = "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" 
+OPENROUTER_API_KEY = "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" 
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",

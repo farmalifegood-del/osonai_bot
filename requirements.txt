@@ -1,4 +1,4 @@
 aiogram
-groq
+openai
 python-dotenv
 aiohttp

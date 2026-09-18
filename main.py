@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAEMlT8OdWO1UeyKdPgAVzV2-wKyW6ndQME"
 # Shu yerga gsk_... bilan boshlanadigan Groq kalitingizni joylang:
-GROQ_API_KEY = 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" 
+GROQ_API_KEY = "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" 
 
 client = Groq(api_key=GROQ_API_KEY)
 

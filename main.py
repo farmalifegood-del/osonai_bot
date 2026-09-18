@@ -9,12 +9,12 @@ from openai import OpenAI
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAFvPZ-U3xOVVRtDDBUfHgl7S7BkimVbbBo"
-# Укажите ваш API-ключ sk-or-v1-... от OpenRouter:
-OPENROUTER_API_KEY = "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" 
+# GitHub'dan olgan ghp_... tokeningizni shu yerga joylang:
+GITHUB_TOKEN = "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" 
 
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=OPENROUTER_API_KEY,
+    base_url="https://models.inference.ai.azure.com",
+    api_key=GITHUB_TOKEN,
 )
 
 bot = Bot(token=BOT_TOKEN)
@@ -29,7 +29,7 @@ async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
         response = client.chat.completions.create(
-            model="deepseek/deepseek-chat:free",
+            model="Claude-3.5-Sonnet",
             messages=[
                 {"role": "user", "content": message.text}
             ]
@@ -43,7 +43,6 @@ async def handle(request):
     return web.Response(text="OK")
 
 async def main():
-    # Запуск легкого веб-сервера для Render
     app = web.Application()
     app.router.add_get("/", handle)
     runner = web.AppRunner(app)
@@ -53,11 +52,7 @@ async def main():
     await site.start()
 
     print("Bot muvaffaqiyatli ishga tushdi!")
-    
-    # Запуск фоновой задачи опроса Telegram
     asyncio.create_task(dp.start_polling(bot))
-    
-    # Поддержание работы веб-сервера
     await asyncio.Event().wait()
 
 if __name__ == "__main__":

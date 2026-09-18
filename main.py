@@ -9,7 +9,8 @@ from groq import Groq
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAEMlT8OdWO1UeyKdPgAVzV2-wKyW6ndQME"
-GROQ_API_KEY = "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" # gsk_ kalitingiz tursin
+# Shu yerga gsk_... bilan boshlanadigan Groq kalitingizni joylang:
+GROQ_API_KEY = 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" 
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -25,7 +26,7 @@ async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="llama3-8b-8192",
             messages=[
                 {"role": "user", "content": message.text}
             ]

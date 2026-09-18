@@ -9,7 +9,7 @@ from google import genai
 logging.basicConfig(level=logging.INFO)
 
 # Render'dagi Environment Variables bo'limidan kalitlarni o'qish
-BOT_TOKEN = "8588322130:AAF_NBzbiLj0Jr79YGhLMLSDckZeyqvwPyw"
+BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO2lK3SAAUaw"
 GEMINI_API_KEY = "AQ.Ab8RN6LoJWo-h9RJcHc-W7loshL5KAxbG2zf-zi8EsHz5x-7GQ"
 
 if not BOT_TOKEN:

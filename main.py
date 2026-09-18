@@ -4,15 +4,15 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiohttp import web
-import google.generativeai as genai
+from google import genai
 
 logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO2lK3SAAUaw"
 GEMINI_API_KEY = "AQ.Ab8RN6LAqQVv0WW7OMmEd8LFZejgdB7aIYB4vx3rJ_JBL_jLSA"
 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+# Yangi rasmiy SDK orqali sozlash
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -25,11 +25,13 @@ async def start_handler(message: types.Message):
 async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
-        response = model.generate_content(message.text)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=message.text,
+        )
         await message.answer(response.text)
     except Exception as e:
         logging.error(f"Xatolik: {e}")
-        # Xatolikning aniq matnini Telegram'ga yuboradi
         await message.answer(f"Aniq xatolik: {str(e)[:300]}")
 
 async def handle(request):

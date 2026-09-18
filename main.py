@@ -4,31 +4,15 @@ import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiohttp import web
-from google import genai
-from google.auth.credentials import Credentials
+from groq import Groq
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO2lK3SAAUaw"
-GEMINI_API_KEY = "AQ.Ab8RN6LAqQVv0WW7OMmEd8LFZejgdB7aIYB4vx3rJ_JBL_jLSA"
+BOT_TOKEN = "8588322130:AAHiAxJNOscxuS-bA3EnYfCgO21K3SAAUaw"
+# Shu yerga gsk_... bilan boshlanadigan Groq kalitingizni joylang:
+GROQ_API_KEY = "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" 
 
-# AQ... kalitini OAuth2 Bearer token ko'rinishida o'rash
-class ExplicitTokenCredentials(Credentials):
-    def __init__(self, token):
-        super().__init__()
-        self.token = token
-
-    def refresh(self, request):
-        pass
-
-# Service account / Cloud client sozlamasi
-credentials = ExplicitTokenCredentials(GEMINI_API_KEY)
-client = genai.Client(
-    credentials=credentials,
-    vertexai=True,
-    project="483143579792",
-    location="us-central1"
-)
+client = Groq(api_key=GROQ_API_KEY)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -41,11 +25,13 @@ async def start_handler(message: types.Message):
 async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=message.text,
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "user", "content": message.text}
+            ]
         )
-        await message.answer(response.text)
+        await message.answer(response.choices[0].message.content)
     except Exception as e:
         logging.error(f"Xatolik: {e}")
         await message.answer(f"Aniq xatolik: {str(e)[:300]}")

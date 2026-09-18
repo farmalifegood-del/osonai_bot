@@ -8,7 +8,7 @@ from openai import OpenAI
 
 logging.basicConfig(level=logging.INFO)
 
-BOT_TOKEN = "8588322130:AAFvPZ-U3xOVVRtDDBUfHgl7S7BkimVbbBo"
+BOT_TOKEN = "8588322130:AAH9EVvD9gVRDo4Z54aq28cKl5OSZHMvGiQ"
 # GitHub'dan olgan ghp_... tokeningizni shu yerga joylang:
 GITHUB_TOKEN = "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" 
 
@@ -29,7 +29,7 @@ async def ai_handler(message: types.Message):
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
     try:
         response = client.chat.completions.create(
-            model="Claude-3.5-Sonnet",
+            model="gpt-4o-mini",  # Barqaror ishlashi uchun gpt-4o-mini ishlatamiz
             messages=[
                 {"role": "user", "content": message.text}
             ]
@@ -52,8 +52,9 @@ async def main():
     await site.start()
 
     print("Bot muvaffaqiyatli ishga tushdi!")
-    asyncio.create_task(dp.start_polling(bot))
-    await asyncio.Event().wait()
+    
+    # Polling funksiyasini to'g'ri ishga tushirish
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
